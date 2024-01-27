@@ -53,6 +53,7 @@ public class Filmarkiv implements FilmarkivADT {
 				continue;
 			}
 			tmp[i] = film;
+			film.setFilmNr(i);
 			i++;
 		}
 		if (slettet) {
