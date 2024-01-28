@@ -29,9 +29,9 @@ public class Filmarkiv2 implements FilmarkivADT {
 
 	@Override
 	public Film finnFilm(int nr) {
-		for (LinearNode<Film> node = this.start; node != null; node = node.getNeste()) {
-			if (node.getData().getFilmNr() == nr) {
-				return node.getData();
+		for (LinearNode<Film> node = this.start; node != null; node = node.neste) {
+			if (node.data.getFilmNr() == nr) {
+				return node.data;
 			}
 		}
 		return null;
@@ -40,77 +40,88 @@ public class Filmarkiv2 implements FilmarkivADT {
 	@Override
 	public void leggTilFilm(Film nyFilm) {
 		if (this.start == null) {
-			this.start = new LinearNode<Film>(nyFilm);
+			this.start = new LinearNode<>(nyFilm);
 			this.antall++;
 			return;
 		}
-		for (LinearNode<Film> node = this.start; node != null; node = node.getNeste()) {
-			if (node.getNeste() == null) {
-				node.setNeste(new LinearNode<Film>(nyFilm));
-				this.antall++;
-				break;
-			}
-		}
+		antall++;
+		LinearNode<Film> node = new LinearNode<>(nyFilm);
+		node.data.setFilmNr(this.antall);
+		node.neste = this.start;
+		this.start = node;
 	}
 
 	@Override
 	public boolean slettFilm(int filmnr) {
 		Boolean slettet = false;
-		for (LinearNode<Film> node = this.start; node != null; node = node.getNeste()) {
-			if (this.start.getData().getFilmNr() == filmnr) {
-				this.start = this.start.getNeste();
-				this.antall--;
-				slettet = true;
-				continue;
-			}
-			if (node.getNeste() != null && node.getNeste().getData().getFilmNr() == filmnr) {
-				node.setNeste(node.getNeste().getNeste());
+
+		// Sjekk første node
+		if (this.start.data.getFilmNr() == filmnr) {
+			this.start = this.start.neste;
+			this.antall--;
+			slettet = true;
+		}
+
+		// Sjekk resten av nodene
+		for (LinearNode<Film> node = this.start; node != null; node = node.neste) {
+			if (node.neste != null && node.neste.data.getFilmNr() == filmnr) {
+				node.neste = node.neste.neste;
 				this.antall--;
 				slettet = true;
 			}
 		}
-		int i = 1;
-		for (LinearNode<Film> node = this.start; node != null; node = node.getNeste()) {
-			node.getData().setFilmNr(i);
-			i++;
+
+		// Setter filmnr på nytt
+		if (slettet) {
+			int i = 1;
+			for (LinearNode<Film> node = this.start; node != null; node = node.neste) {
+				node.data.setFilmNr(i);
+				i++;
+			}
 		}
+
 		return slettet;
 	}
 
 	@Override
 	public Film[] soekTittel(String delstreng) {
 		Film[] filmer = new Film[this.antall];
+
 		int i = 0;
-		for (LinearNode<Film> node = this.start; node != null; node = node.getNeste()) {
-			if (node.getData().getTittel().toLowerCase().contains(delstreng.toLowerCase())) {
-				filmer[i] = node.getData();
+		for (LinearNode<Film> node = this.start; node != null; node = node.neste) {
+			if (node.data.getTittel().toLowerCase().contains(delstreng.toLowerCase())) {
+				filmer[i] = node.data;
 				i++;
 			}
 		}
+
 		return this.trimTab(filmer, i);
 	}
 
 	@Override
 	public Film[] soekProdusent(String delstreng) {
 		Film[] filmer = new Film[this.antall];
+
 		int i = 0;
-		for (LinearNode<Film> node = this.start; node != null; node = node.getNeste()) {
-			if (node.getData().getProdusent().toLowerCase().contains(delstreng.toLowerCase())) {
-				filmer[i] = node.getData();
+		for (LinearNode<Film> node = this.start; node != null; node = node.neste) {
+			if (node.data.getProdusent().toLowerCase().contains(delstreng.toLowerCase())) {
+				filmer[i] = node.data;
 				i++;
 			}
 		}
+
 		return this.trimTab(filmer, i);
 	}
 
 	@Override
 	public int antall(Sjanger sjanger) {
 		int antall = 0;
-		for (LinearNode<Film> node = this.start; node != null; node = node.getNeste()) {
-			if (node.getData().getSjanger() == sjanger) {
+		for (LinearNode<Film> node = this.start; node != null; node = node.neste) {
+			if (node.data.getSjanger() == sjanger) {
 				antall++;
 			}
 		}
+
 		return antall;
 	}
 

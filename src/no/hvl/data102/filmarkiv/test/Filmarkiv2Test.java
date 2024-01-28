@@ -41,7 +41,7 @@ class Filmarkiv2Test {
 	@Test
 	void testLeggTilFilm() {
 		assertEquals(1, testFilmArkiv.antall());
-		testFilmArkiv.leggTilFilm(film1);
+		testFilmArkiv.leggTilFilm(film2);
 		assertEquals(2, testFilmArkiv.antall());
 	}
 
