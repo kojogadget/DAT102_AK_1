@@ -28,7 +28,6 @@ class Filmarkiv2Test {
 	@Test
 	void testFinnFilm() {
 		assertEquals(null, testFilmArkiv.finnFilm(0));
-		testFilmArkiv.leggTilFilm(film1);
 		testFilmArkiv.leggTilFilm(film2);
 		assertEquals(film1, testFilmArkiv.finnFilm(1));
 	}	
